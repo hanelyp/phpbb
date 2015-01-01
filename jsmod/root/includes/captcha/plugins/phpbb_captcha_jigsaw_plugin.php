@@ -3,8 +3,8 @@
 *
 * @package VC
 * @version $Id: phpbb_captcha_jigsaw_plugin.php $
-* @copyright (c) 2011 Peter Hanely
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @copyright (c) 2015 Peter Hanely
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License v2 or later
 *
 */
 
@@ -80,20 +80,17 @@ class phpbb_captcha_jigsaw extends phpbb_more_abstract_captcha
 		global $config, $phpbb_root_path;
 		
 		$solution = explode(',', $code);
-		//$solution = explode(',', $this->genKey());
-		//print_r($solution);
 		$img = imagecreatetruecolor($config['captcha_puzzle_x']*$config['captcha_puzzle_img_x'], $config['captcha_puzzle_y']*$config['captcha_puzzle_img_y']);
 
 		// select an image at random from the configured folder
 		$filenames = array_values(preg_grep("/.*\.png$/", scandir($config['captcha_puzzle_img_path'])));
-		//print_r($filenames);
-		//$name = $filenames[ rand(0,count($filenames)-1) ];
 		$name = $filenames[ $seed%count($filenames) ];
-		//echo $config['captcha_puzzle_img_path'].$name;
+
 		list($width, $height, $type, $attr) = getimagesize($config['captcha_puzzle_img_path'].$name);
 		$srcimg = imagecreatefrompng($config['captcha_puzzle_img_path'].$name);
 
 		// rescale to configured size
+/*	// php 5
 		$sX = $width/($config['captcha_puzzle_x']*$config['captcha_puzzle_img_x']);
 		$sY = $height/($config['captcha_puzzle_y']*$config['captcha_puzzle_img_y']);
 		if (($sX == 1) && ($sY >= 1) || ($sX >= 1) && ($sY == 1)) // don't resize
@@ -114,8 +111,8 @@ class phpbb_captcha_jigsaw extends phpbb_more_abstract_captcha
 			$width = $config['captcha_puzzle_x']*$config['captcha_puzzle_img_x']*$sX/$sY;
 			$height = $config['captcha_puzzle_y']*$config['captcha_puzzle_img_y'];
 
-		}		
-		
+		}
+// */		
 		// offset to center puzzle in image
 		$xoff = ($width-$config['captcha_puzzle_x']*$config['captcha_puzzle_img_x'])/2;
 		$yoff = ($height-$config['captcha_puzzle_y']*$config['captcha_puzzle_img_y'])/2;
@@ -125,14 +122,14 @@ class phpbb_captcha_jigsaw extends phpbb_more_abstract_captcha
 			for ($j = 0; $j < $config['captcha_puzzle_y']; $j++)
 			{
 				$srcindex = $i + $j*$config['captcha_puzzle_x'];
-				//echo "$srcindex\n";
+
 				$destx = intval($solution[$srcindex]%$config['captcha_puzzle_x']);
 				$desty = intval($solution[$srcindex]/$config['captcha_puzzle_x']);
-				//echo "from ($i,$j) to ($destx, $desty)<br />\n";
+
 				imagecopy($img, $srcimg,
 					$destx*$config['captcha_puzzle_img_x']+1, $desty*$config['captcha_puzzle_img_y']+1,
 					$xoff+$i*$config['captcha_puzzle_img_x'], $yoff+$j*$config['captcha_puzzle_img_y'],
-					       $config['captcha_puzzle_img_x']-2,        $config['captcha_puzzle_img_y']-2);
+						$config['captcha_puzzle_img_x']-2,	$config['captcha_puzzle_img_y']-2);
 			}
 		}
 
@@ -142,7 +139,6 @@ class phpbb_captcha_jigsaw extends phpbb_more_abstract_captcha
 		imagepng($img);
 		imagedestroy($img);
 		imagedestroy($srcimg);
-// */
 	}
 	
 	function &get_instance()
@@ -180,7 +176,7 @@ class phpbb_captcha_jigsaw extends phpbb_more_abstract_captcha
 		global $template, $config, $phpEx, $phpbb_root_path;
 		
 		// format URL for image without coding that garbles with CSS
-		$link = append_sid($phpbb_root_path . 'ucp.' . $phpEx,  'mode=confirm&confirm_id=' . $this->confirm_id . '&type=' . $this->type);
+		$link = append_sid($phpbb_root_path . 'ucp.' . $phpEx, 'mode=confirm&confirm_id=' . $this->confirm_id . '&type=' . $this->type);
 		$template->assign_var('CONFIRM_IMAGE_LINK_NOCODE',	$link);
 		
 		// pass in configured size info

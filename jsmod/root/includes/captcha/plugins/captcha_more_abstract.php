@@ -112,7 +112,8 @@ class phpbb_more_abstract_captcha extends phpbb_default_captcha
 		global $db, $user;
 
 		$this->code = $this->genKey();
-		$this->confirm_id = md5(unique_id($user->ip));
+		//$this->confirm_id = md5(unique_id($user->ip));
+		$this->confirm_id = hash('md5', unique_id($user->ip));
 		$this->seed = hexdec(substr(unique_id(), 4, 10));
 		$this->solved = 0;
 		// compute $seed % 0x7fffffff
@@ -174,7 +175,7 @@ class phpbb_more_abstract_captcha extends phpbb_default_captcha
 					AND session_id = \'' . $db->sql_escape($user->session_id) . '\'';
 		$db->sql_query($sql);
 	}
-	
+
 	function get_template()
 	{
 		if ($this->is_solved())
@@ -186,70 +187,5 @@ class phpbb_more_abstract_captcha extends phpbb_default_captcha
 		//exit;	// test if we get here
 		return $this->template;
 	}
-	
-	
-	
-/*
-	function acp_page($id, &$module)
-	{
-		global $db, $user, $auth, $template;
-		global $config, $phpbb_root_path, $phpbb_admin_path, $phpEx;
-		
-		if (!$this->has_config())
-		{
-			trigger_error($user->lang['CAPTCHA_NO_OPTIONS'] . adm_back_link($module->u_action));
-		}
-
-		$user->add_lang('acp/board');
-
-		$config_vars = array(
-			'enable_confirm'	=> 'REG_ENABLE',
-			'enable_post_confirm'	=> 'POST_ENABLE',
-			'confirm_refresh'	=> 'CONFIRM_REFRESH',
-			'captcha_abstract'	=> 'CAPTCHA_ABSTRACT',
-		);
-
-		$module->tpl_name = 'captcha_abstract_acp';
-		$module->page_title = 'ACP_VC_SETTINGS';
-		$form_key = 'acp_captcha';
-		add_form_key($form_key);
-
-		$submit = request_var('submit', '');
-
-		if ($submit && check_form_key($form_key))
-		{
-			$captcha_vars = array_keys($this->captcha_vars);
-			foreach ($captcha_vars as $captcha_var)
-			{
-				$value = request_var($captcha_var, 0);
-				if ($value >= 0)
-				{
-					set_config($captcha_var, $value);
-				}
-			}
-
-			add_log('admin', 'LOG_CONFIG_VISUAL');
-			trigger_error($user->lang['CONFIG_UPDATED'] . adm_back_link($module->u_action));
-		}
-		else if ($submit)
-		{
-			trigger_error($user->lang['FORM_INVALID'] . adm_back_link($module->u_action));
-		}
-		else
-		{
-			foreach ($this->captcha_vars as $captcha_var => $template_var)
-			{
-				$var = (isset($_REQUEST[$captcha_var])) ? request_var($captcha_var, 0) : $config[$captcha_var];
-				$template->assign_var($template_var, $var);
-			}
-
-			$template->assign_vars(array(
-				'CAPTCHA_PREVIEW'	=> $this->get_demo_template($id),
-				'CAPTCHA_NAME'		=> $this->get_class_name(),
-				'U_ACTION'		=> $module->u_action,
-			));
-		}
-	}
-*/
 
 }

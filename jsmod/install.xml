@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<?xml-stylesheet type="text/xsl" href="1.2.6/modx.prosilver.en.xsl"?>
+<?xml-stylesheet type="text/xsl" href="modx.prosilver.en.xsl"?>
 <!--For security purposes, please check: https
 ://www.phpbb.com/mods/ for the latest version of this MOD. Although MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD. No support will be given for MODs not found within the MODs Database which can be found at https://www.phpbb.com/mods/-->
 <mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://www.phpbb.com/mods/xml/modx-1.2.6.xsd">
@@ -10,7 +10,8 @@
 
 		<description lang="en">Arrange pieces to show picture and prove yourself human.</description>
 
-		<author-notes lang="en">This MOD:
+		<author-notes lang="en">
+		This MOD:
 		- requires client side javascript and some CSS3.
 		- makes use of a site admin supplied folder of .png images.
 		</author-notes>
@@ -25,12 +26,12 @@
 			</author>
 		</author-group>
 
-		<mod-version>0.9.0</mod-version>
+		<mod-version>0.9.1</mod-version>
 
 		<installation>
-			<level>easy</level>
-			<time>20</time>
-			<target-version>3.0.11</target-version>
+			<level>Intermediate</level>
+			<time>1200</time>
+			<target-version>3.0.12</target-version>
 		</installation>
 
 		<history>
@@ -38,7 +39,14 @@
 				<date>2014-12-24</date>
 				<rev-version>0.9.0</rev-version>
 				<changelog lang="en">
-					<change>Initial beta submission</change>
+					<change>Initial beta package</change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2015-01-01</date>
+				<rev-version>0.9.1</rev-version>
+				<changelog lang="en">
+					<change>Minor revisions for admin side bug and phpBB mod standards</change>
 				</changelog>
 			</entry>
 		</history>
@@ -62,18 +70,18 @@
 		<open src="language/en/acp/board.php">
 			<edit>
 				<find>'CAPTCHA_GD'							=> 'GD image',</find>
-				<action type="after-add">'CAPTCHA_JIGSAW'							=> 'Jigsaw Puzzle',</action>
+				<action type="after-add">'CAPTCHA_JIGSAW'						=> 'Jigsaw Puzzle',</action>
 			</edit>
 		</open>
 
 		<diy-instructions lang="en">
 - This mod requires a user provided folder with .png files suited for cutting into puzzles.  Any path readable and listable by the web script should work.
 - Configure under acp->General->Spambot Countermeasures.
-	- - Select Jigsaw Puzzle.
-	- - Configure
-		- - - Enter path to source image folder.
-		- - - Set size of puzzle, 3x3 tiles 100x75pixels each works well.
-- The images should be (tilesX*sizeX x tilesY*sizeY) or slightly larger.  Recommended settings are for 300x225pixel puzzels.  Code will resize if needed.
+- - Select Jigsaw Puzzle.
+- - Configure
+- - - Enter path to source image folder.
+- - - Set size of puzzle, 3x3 tiles 100x75pixels each works well.
+- The images should be (tilesX*sizeX x tilesY*sizeY) or slightly larger.  Recommended settings are for 300x225pixel puzzels.
 		</diy-instructions>
 	</action-group>
 </mod>
