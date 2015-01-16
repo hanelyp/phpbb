@@ -1,4 +1,0 @@
-#!/bin/bash
-
-cd ~/www/peter/phpbb-mpv/mpv && ./mpv /var/www/localhost/htdocs/peter/phpbb/captcha-jigsaw-beta1.zip
-
