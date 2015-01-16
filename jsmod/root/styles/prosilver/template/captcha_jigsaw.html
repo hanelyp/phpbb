@@ -1,13 +1,4 @@
-<!-- IF S_TYPE == 1 -->
-<div class="panel">
-	<div class="inner"><span class="corners-top"><span></span></span>
-
-	<h3>{L_CONFIRMATION}</h3>
-	<p>{L_CONFIRM_EXPLAIN_JIGSAW}</p>
-
-	<fieldset class="fields2">
-<!-- ENDIF -->
-	<style>
+<style type="text/css">
 .puzzleArea {
 	position:relative;
 	height:{CAPTCHA_PUZZLE_HEIGHT}px;
@@ -18,15 +9,19 @@
 .tileSelected {
 	border: 1px solid red;
 }
-	</style>
+</style>
+<!-- IF S_TYPE == 1 -->
+<div class="panel">
+	<div class="inner"><span class="corners-top"><span></span></span>
+
+	<h3>{L_CONFIRMATION}</h3>
+	<p>{L_CONFIRM_EXPLAIN_JIGSAW}</p>
+
+	<fieldset class="fields2">
+<!-- ENDIF -->
 	<!--script type="text/javascript" src="script/Sprite.js"></script-->
 	<script type="text/javascript" src="script/captcha_jigsaw.js"></script>
-	<script>
-// <![CDATA[
-//	onload_functions.push('apply_onkeypress_event()');
-// ]]>
-	</script>
-	<script>
+	<script type="text/javascript">
 	//<![CDATA[
 		window.addEventListener("load", function()
 		{
@@ -36,9 +31,11 @@
 	</script>
 	<dl>
 		<dt><label for="confirm_code">{L_CONFIRM_CODE}:</label></dt>
-		<dd class="puzzleArea" id="puzzleframe"><!--img src="{CONFIRM_IMAGE_LINK}" alt="{L_CONFIRM_CODE}" /--><noscript>Please enable javascript to operate captcha puzzle</noscript></dd>
+		<dd class="puzzleArea" id="puzzleframe">
+			<noscript><p>{L_CONFIRM_ENABLE_JAVASCRIPT}</p></noscript>
+		</dd>
 		<dd><input type="hidden" name="confirm_code" id="confirm_code" size="4" maxlength="4" tabindex="{$CAPTCHA_TAB_INDEX}" class="inputbox narrow" title="{L_CONFIRM_CODE}" />
-		<!-- IF S_CONFIRM_REFRESH --><input type="submit" name="refresh_vc" id="refresh_vc" class="button2" value="{L_VC_REFRESH}" /><!-- ENDIF -->
+		<!-- IF S_CONFIRM_REFRESH --><input class="button2" type="submit" name="refresh_vc" id="refresh_vc" value="{L_VC_REFRESH}" /><!-- ENDIF -->
 		<input type="hidden" name="confirm_id" id="confirm_id" value="{CONFIRM_ID}" /></dd>
 		<dd>{L_CONFIRM_CODE_EXPLAIN_JIGSAW}</dd>
 	</dl>

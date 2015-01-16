@@ -52,7 +52,7 @@ class phpbb_more_abstract_captcha extends phpbb_default_captcha
 	}
 	
 	/**
-	*  API function
+	* API function
 	*/
 	function has_config()
 	{
@@ -74,13 +74,17 @@ class phpbb_more_abstract_captcha extends phpbb_default_captcha
 
 	function execute_demo($k = false)
 	{
-		//echo "execute demo ...<br>\n";
+		//echo 'execute demo ...<br>\n';
 		global $user;
 
 		if ($k == false)
+		{
 			$this->code = $this->genKey();
+		}
 		else
+		{
 			$this->code = $k;
+		}
 		$this->seed = hexdec(substr(unique_id(), 4, 10));
 
 		// compute $seed % 0x7fffffff
@@ -108,7 +112,7 @@ class phpbb_more_abstract_captcha extends phpbb_default_captcha
 	*/
 	function generate_code()
 	{
-		//echo "generate code ...<br>\n";
+		//echo 'generate code ...<br>\n';
 		global $db, $user;
 
 		$this->code = $this->genKey();
@@ -134,7 +138,7 @@ class phpbb_more_abstract_captcha extends phpbb_default_captcha
 	*/
 	function regenerate_code()
 	{
-		//echo "regenerate code ...<br>\n";
+		//echo 'regenerate code ...<br>\n';
 		global $db, $user;
 
 		$this->code = $this->genKey();
@@ -157,7 +161,7 @@ class phpbb_more_abstract_captcha extends phpbb_default_captcha
 	*/
 	function new_attempt()
 	{
-		//echo "new attempt ...<br>\n";
+		//echo 'new attempt ...<br>\n';
 		global $db, $user;
 
 		$this->code = $this->genKey();
@@ -171,7 +175,7 @@ class phpbb_more_abstract_captcha extends phpbb_default_captcha
 				'seed'			=> (int) $this->seed)) . '
 				, attempts = attempts + 1
 				WHERE
-				confirm_id = \'' . $db->sql_escape($this->confirm_id) . '\'
+					confirm_id = \'' . $db->sql_escape($this->confirm_id) . '\'
 					AND session_id = \'' . $db->sql_escape($user->session_id) . '\'';
 		$db->sql_query($sql);
 	}

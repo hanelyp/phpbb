@@ -21,12 +21,12 @@
 		<author-group>
 			<author>
 				<realname>Peter Hanely</realname>
-				<username phpbbcom="no">nobody</username>
+				<username phpbbcom="yes">hanelyp</username>
 				<homepage>https://github.com/hanelyp/</homepage>
 			</author>
 		</author-group>
 
-		<mod-version>0.9.1</mod-version>
+		<mod-version>1.0.0 RC1</mod-version>
 
 		<installation>
 			<level>Intermediate</level>
@@ -47,6 +47,14 @@
 				<rev-version>0.9.1</rev-version>
 				<changelog lang="en">
 					<change>Minor revisions for admin side bug and phpBB mod standards</change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2015-01-016</date>
+				<rev-version>1.0.0 RC1</rev-version>
+				<changelog lang="en">
+					<change>Minor revisions for phpBB mod standards and clarity</change>
+					<change>enable image resize wrapped in a configuration option, default off.  When enabled requires php 5.5</change>
 				</changelog>
 			</entry>
 		</history>

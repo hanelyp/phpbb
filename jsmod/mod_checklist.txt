@@ -1,0 +1,58 @@
+
+
+    Insta Deny Checklist
+x	MOD description is complete and informative. #
+x	License.txt file is present. #
+x	The install MODX file should have the word "install" in the filename (e.g.: install_some_mod.xml). #
+x	The newest MODX XSL file (modx.prosilver.en.xsl) must be included. #
+x	Both the main install MODX file and the license.txt file should be placed in the root of your zip package, not within a sub-directory. #
+x	Edits to the main install XML file should be in English, and include instructions for the prosilver style. #
+x	IN PHPBB check must be used in all included files, that includes any user facing files. For example, function files and language files. #
+	The MOD needs to pass MPV. #
+    Packaging
+	Valid (descriptive but concise) package file name (e.g.: my_mod_name_v104.zip). #
+	Language files are within the language directory and correct lang_name (ISO) translations are used. #
+n/a	Alternate (non-English) language MODX files used correctly. #
+	Template and theme files contained in their respective directories. #
+n/a	Alternate style (template) MODX files are used correctly. #
+n/a	Additional instructions and optional install files (such as foreign language install files and additional template install files) should be placed within the /contrib/ directory. #
+    MODX
+n/a	If PHP 5.x specific code is used within the MOD, this must be noted in the MOD Author notes in the install MODX file. #
+	Installation performs correctly using Automod. #
+	MOD is tested and works as intended. #
+    Templates
+x	No hard-coded PHP in template files. #
+	prosilver HTML is valid XHTML 1.0 strict (contains no XHTML errors). #
+n/a	subsilver2 HTML is valid XHTML 1.0 Transitional (contains no XHTML errors). #
+x	No broken or missing images. #
+n/a	English language images are supplied as necessary. #
+x	CSS and Javascript are contained within <![CDATA[ ]]> blocks, and contain no validation errors. #
+    Language Files
+x	File is saved as UTF-8 Encoded with UNIX line endings. #
+	File does not contain a BOM. #
+    PHP Files
+x	request_var()[?] function is used instead of $_POST, $_GET, or $_REQUEST to get user input. #
+x	integer variables from request_var() are request_var('var', 0); and not request_var('var', '0');. #
+x	phpBB3 DBAL is used instead of database specific SQL functions. #
+x	User-input string variables are properly sanitised using $db->sql_escape();[?] when using variables in SQL queries. #
+x	int and float variables are enforced type-casting as (int) and (float) when inserting into SQL queries. #
+x	$db->sql_build_query();[?] is used on large SQL queries (e.g.: if the query contains joins). #
+x	$db->sql_build_array();[?] is used on SQL INSERT and SQL UPDATE queries. #
+n/a	$db->sql_multi_insert();[?] is used when performing multiple SQL INSERT statements. #
+n/a	$db->sql_in_set();[?] is used for SQL IN() WHERE statements. #
+x	trigger_error();[?] is used for error handling and user messages instead of die(); or message_die(); or similar. #
+n/a	$_SERVER variables are properly sanitised, (many $_SERVER indexes can be user manipulated). #
+	Contains no magic numbers. #
+x	No un-initialised variables or indices. #
+n/a	$db->sql_query_limit();[?] is used instead of LIMIT in SQL queries. #
+n/a	Static SQL queries are cached. #
+n/a	login_forum_box(); or login_box();[?] is used for login. #
+x	SQL Queries within loops should be avoided. #
+n/a	confirm_box();[?] is used for the user to confirm sensitive actions (such as deleting items). #
+x	URLs pointing to phpBB files call append_sid();[?] to correctly append the session id. #
+    Miscellaneous
+x	Tabs are used instead of spaces for indenting. A tab is defined as four spaces in this instance. #
+x	Using Unix (LF) line endings. See: Line Ending Format #
+x	Proper file headers and php DocBlocks are used. #
+	Braces { and } should be on newlines. See Coding guidelines #
+

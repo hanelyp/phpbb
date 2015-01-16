@@ -34,7 +34,8 @@ class phpbb_captcha_jigsaw extends phpbb_more_abstract_captcha
 		'captcha_puzzle_y'	=>	'CAPTCHA_PUZZLE_Y',
 		'captcha_puzzle_img_x'	=>	'CAPTCHA_PUZZLE_IMG_X',
 		'captcha_puzzle_img_y'	=>	'CAPTCHA_PUZZLE_IMG_Y',
-		'captcha_puzzle_img_path' =>	'CAPTCHA_PUZZLE_IMG_PATH'
+		'captcha_puzzle_img_path' =>	'CAPTCHA_PUZZLE_IMG_PATH',
+		'captcha_puzzle_resize'	=>	'CAPTCHA_PUZZLE_RESIZE',
 	);
 
 	var $defaults = array(
@@ -42,7 +43,8 @@ class phpbb_captcha_jigsaw extends phpbb_more_abstract_captcha
 		'captcha_puzzle_y'	=>	3,
 		'captcha_puzzle_img_x'	=>	100,
 		'captcha_puzzle_img_y'	=>	75,
-		'captcha_puzzle_img_path' =>	'images/'
+		'captcha_puzzle_img_path' =>	'images/',
+		'captcha_puzzle_resize'	=>	0
 	);
 	
 	var $template = 'captcha_jigsaw.html';
@@ -57,7 +59,7 @@ class phpbb_captcha_jigsaw extends phpbb_more_abstract_captcha
 	// Generate a key suitable for a sum of jigsaw.
 	function genKey()
 	{
-		//echo "generating key ...<br>\n";
+		//echo 'generating key ...<br>\n';
 		//debug_print_backtrace ();
 		global $config;
 		$places = array();
@@ -80,56 +82,73 @@ class phpbb_captcha_jigsaw extends phpbb_more_abstract_captcha
 		global $config, $phpbb_root_path;
 		
 		$solution = explode(',', $code);
-		$img = imagecreatetruecolor($config['captcha_puzzle_x']*$config['captcha_puzzle_img_x'], $config['captcha_puzzle_y']*$config['captcha_puzzle_img_y']);
+		$img = imagecreatetruecolor(
+			$config['captcha_puzzle_x'] * $config['captcha_puzzle_img_x'],
+			$config['captcha_puzzle_y'] * $config['captcha_puzzle_img_y']);
 
 		// select an image at random from the configured folder
-		$filenames = array_values(preg_grep("/.*\.png$/", scandir($config['captcha_puzzle_img_path'])));
-		$name = $filenames[ $seed%count($filenames) ];
+		if (!file_exists($config['captcha_puzzle_img_path']))	// should never happen unless config is invalid.
+		{
+			return false;
+		}
+		$filenames = array_values(preg_grep('/.*\.png$/', scandir($config['captcha_puzzle_img_path'])));
+		$name = $filenames[ $seed % sizeof($filenames) ];
 
 		list($width, $height, $type, $attr) = getimagesize($config['captcha_puzzle_img_path'].$name);
-		$srcimg = imagecreatefrompng($config['captcha_puzzle_img_path'].$name);
+		$source_image = imagecreatefrompng($config['captcha_puzzle_img_path'].$name);
+		if (!$source_image)
+		{
+			return false;
+		}		
 
 		// rescale to configured size
-/*	// php 5
-		$sX = $width/($config['captcha_puzzle_x']*$config['captcha_puzzle_img_x']);
-		$sY = $height/($config['captcha_puzzle_y']*$config['captcha_puzzle_img_y']);
-		if (($sX == 1) && ($sY >= 1) || ($sX >= 1) && ($sY == 1)) // don't resize
-		{	}
-		else if ($sX < $sY)
+	// php 5 code, enabled by config
+		if ($config['captcha_puzzle_resize'])
 		{
-			$t = imagescale($srcimg, $config['captcha_puzzle_x']*$config['captcha_puzzle_img_x'], $config['captcha_puzzle_y']*$config['captcha_puzzle_img_y']*$sY/$sX);
-			imagedestroy($srcimg);
-			$srcimg = $t;
-			$width = $config['captcha_puzzle_x']*$config['captcha_puzzle_img_x'];
-			$height = $config['captcha_puzzle_y']*$config['captcha_puzzle_img_y']*$sY/$sX;
-		}
-		else
-		{
-			$t = imagescale($srcimg, $config['captcha_puzzle_x']*$config['captcha_puzzle_img_x']*$sX/$sY, $config['captcha_puzzle_y']*$config['captcha_puzzle_img_y']);
-			imagedestroy($srcimg);
-			$srcimg = $t;
-			$width = $config['captcha_puzzle_x']*$config['captcha_puzzle_img_x']*$sX/$sY;
-			$height = $config['captcha_puzzle_y']*$config['captcha_puzzle_img_y'];
-
+			$scale_x = $width / ($config['captcha_puzzle_x'] * $config['captcha_puzzle_img_x']);
+			$scale_y = $height / ($config['captcha_puzzle_y'] * $config['captcha_puzzle_img_y']);
+			if (($scale_x == 1) && ($scale_y >= 1) || ($scale_x >= 1) && ($scale_y == 1))
+			{
+				// do nothing, image is already as close as possible without changing aspect ratio
+			}
+			else if ($scale_x < $scale_y)
+			{
+				$width = $config['captcha_puzzle_x'] * $config['captcha_puzzle_img_x'];
+				$height = $config['captcha_puzzle_y'] * $config['captcha_puzzle_img_y'] * $scale_y / $scale_x;
+				$temp = imagescale($source_image, $width, $height);
+				imagedestroy($source_image);
+				$source_image = $temp;
+				
+			}
+			else
+			{
+				$width = $config['captcha_puzzle_x'] * $config['captcha_puzzle_img_x'] * $scale_x / $scale_y;
+				$height = $config['captcha_puzzle_y'] * $config['captcha_puzzle_img_y'];
+				$temp = imagescale($source_image, $width, $height);
+				imagedestroy($source_image);
+				$source_image = $temp;
+			}
 		}
 // */		
 		// offset to center puzzle in image
-		$xoff = ($width-$config['captcha_puzzle_x']*$config['captcha_puzzle_img_x'])/2;
-		$yoff = ($height-$config['captcha_puzzle_y']*$config['captcha_puzzle_img_y'])/2;
+		$xoff = ($width - $config['captcha_puzzle_x'] * $config['captcha_puzzle_img_x']) / 2;
+		$yoff = ($height - $config['captcha_puzzle_y'] * $config['captcha_puzzle_img_y']) / 2;
 
 		for ($i = 0; $i < $config['captcha_puzzle_x']; $i++)
 		{
 			for ($j = 0; $j < $config['captcha_puzzle_y']; $j++)
 			{
-				$srcindex = $i + $j*$config['captcha_puzzle_x'];
+				// where to place this tile?
+				$source_index = $i + $j * $config['captcha_puzzle_x'];
 
-				$destx = intval($solution[$srcindex]%$config['captcha_puzzle_x']);
-				$desty = intval($solution[$srcindex]/$config['captcha_puzzle_x']);
+				$dest_x = intval($solution[$source_index] % $config['captcha_puzzle_x']);
+				$dest_y = intval($solution[$source_index] / $config['captcha_puzzle_x']);
 
-				imagecopy($img, $srcimg,
-					$destx*$config['captcha_puzzle_img_x']+1, $desty*$config['captcha_puzzle_img_y']+1,
-					$xoff+$i*$config['captcha_puzzle_img_x'], $yoff+$j*$config['captcha_puzzle_img_y'],
-						$config['captcha_puzzle_img_x']-2,	$config['captcha_puzzle_img_y']-2);
+				// image copied with 1 pixel margin border
+				imagecopy($img, $source_image,
+					$dest_x * $config['captcha_puzzle_img_x'] + 1, $dest_y * $config['captcha_puzzle_img_y'] + 1,
+					$xoff + $i * $config['captcha_puzzle_img_x'], $yoff + $j * $config['captcha_puzzle_img_y'],
+						$config['captcha_puzzle_img_x'] - 2,	$config['captcha_puzzle_img_y'] - 2);
 			}
 		}
 
@@ -138,7 +157,7 @@ class phpbb_captcha_jigsaw extends phpbb_more_abstract_captcha
 		header('Cache-control: no-cache, no-store');
 		imagepng($img);
 		imagedestroy($img);
-		imagedestroy($srcimg);
+		imagedestroy($source_image);
 	}
 	
 	function &get_instance()
@@ -162,8 +181,11 @@ class phpbb_captcha_jigsaw extends phpbb_more_abstract_captcha
 	{
 		global $config;
 		// validate that image path is reasonable
-		if (!file_exists($config['captcha_puzzle_img_path']))	{	return false;	}
-		$filenames = array_values(preg_grep("/.*\.png$/", scandir($config['captcha_puzzle_img_path'])));
+		if (!file_exists($config['captcha_puzzle_img_path']))
+		{
+			return false;
+		}
+		$filenames = array_values(preg_grep('/.*\.png$/', scandir($config['captcha_puzzle_img_path'])));
 		return (count($filenames)>0);
 	}
 	
@@ -180,8 +202,8 @@ class phpbb_captcha_jigsaw extends phpbb_more_abstract_captcha
 		$template->assign_var('CONFIRM_IMAGE_LINK_NOCODE',	$link);
 		
 		// pass in configured size info
-		$template->assign_var('CAPTCHA_PUZZLE_WIDTH', (int)$config['captcha_puzzle_x']*$config['captcha_puzzle_img_x']);
-		$template->assign_var('CAPTCHA_PUZZLE_HEIGHT', (int)$config['captcha_puzzle_y']*$config['captcha_puzzle_img_y']);
+		$template->assign_var('CAPTCHA_PUZZLE_WIDTH', (int) $config['captcha_puzzle_x'] * $config['captcha_puzzle_img_x']);
+		$template->assign_var('CAPTCHA_PUZZLE_HEIGHT', (int) $config['captcha_puzzle_y'] * $config['captcha_puzzle_img_y']);
 
 		foreach ($this->captcha_vars as $captcha_var => $template_var)
 		{
@@ -271,25 +293,37 @@ class phpbb_captcha_jigsaw extends phpbb_more_abstract_captcha
 			}
 			$path = request_var('captcha_puzzle_img_path', '');
 			if (strlen($path) > 0)
-			{	set_config('captcha_puzzle_img_path', $path);	}
+			{
+				set_config('captcha_puzzle_img_path', $path);
+			}
 
 			add_log('admin', 'LOG_CONFIG_VISUAL');
 			trigger_error($user->lang['CONFIG_UPDATED'] . adm_back_link($module->u_action));
 		}
-		else if ($submit)
+		else if ( $submit )
 		{
 			trigger_error($user->lang['FORM_INVALID'] . adm_back_link($module->u_action));
 		}
 		else
 		{
-			foreach ($this->captcha_vars as $captcha_var => $template_var)
+			foreach ( $this->captcha_vars as $captcha_var => $template_var )
 			{
-				$var = (isset($_REQUEST[$captcha_var])) ? request_var($captcha_var, $this->defaults[$captcha_var]) : $config[$captcha_var];
-				if (!$var)	{	$var = $this->defaults[$captcha_var];	}
+				if ( isset($_REQUEST[$captcha_var]))
+				{
+					$var = request_var($captcha_var, $this->defaults[$captcha_var]);
+				}
+				else
+				{
+					$var = $config[$captcha_var];
+				}
+				if ( !$var )
+				{
+					$var = $this->defaults[$captcha_var];
+				}
 				$template->assign_var($template_var, $var);
 			}
 
-			$template->assign_vars(array(
+			$template->assign_vars ( array(
 				'CAPTCHA_PREVIEW'	=> $this->get_demo_template($id),
 				'CAPTCHA_NAME'		=> $this->get_class_name(),
 				'U_ACTION'		=> $module->u_action,

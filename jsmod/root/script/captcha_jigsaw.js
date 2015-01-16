@@ -147,6 +147,7 @@ puzzle = {
 		{
 			puzzle.tiles[puzzle.currenttile].sprite.className="tileSelected";
 			puzzle.tiles[puzzle.currenttile].elevate = 10;
+			puzzle.tiles[puzzle.currenttile].translateTo(puzzle.imgsize[0]*(X+0.95), puzzle.imgsize[1]*(Y+0.95));
 		}
 		document.getElementById("confirm_code").value = puzzle.tileindex.slice(0,9).join(',');
 	},
