@@ -1,0 +1,12 @@
+
+.puzzleArea {
+	position:relative;
+	height:{CAPTCHA_PUZZLE_HEIGHT}px;
+	width:{CAPTCHA_PUZZLE_WIDTH}px;
+	overflow: visible;
+	background-color: rgb(0,120,60);
+}
+.tileSelected {
+	border: 1px solid red;
+}
+

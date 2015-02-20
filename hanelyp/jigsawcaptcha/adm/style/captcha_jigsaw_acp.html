@@ -1,0 +1,66 @@
+<!-- INCLUDE overall_header.html -->
+
+<a name="maincontent"></a>
+	<a href="{U_ACTION}" style="float: {S_CONTENT_FLOW_END};">&laquo; {L_BACK}</a>
+
+<h1>{L_ACP_VC_SETTINGS}</h1>
+
+<p>{L_ACP_VC_SETTINGS_EXPLAIN}</p>
+
+<form id="acp_captcha" method="post" action="{U_ACTION}">
+
+<fieldset>
+<legend>{L_GENERAL_OPTIONS}</legend>
+
+<dl>
+	<dt><label for="captcha_puzzle_img_path">{L_CAPTCHA_PUZZLE_IMG_PATH}:</label><br /><span>{L_CAPTCHA_PUZZLE_IMG_PATH_EXPLAIN}</span></dt>
+	<dd><input id="captcha_puzzle_img_path" name="captcha_puzzle_img_path" value="{CAPTCHA_PUZZLE_IMG_PATH}" type="text" /></dd>
+</dl>
+<dl>
+	<dt><label for="captcha_puzzle_x">{L_CAPTCHA_PUZZLE_X_GRID}:</label><br /><span>{L_CAPTCHA_PUZZLE_X_EXPLAIN}</span></dt>
+	<dd><input id="captcha_puzzle_x" name="captcha_puzzle_x" value="{CAPTCHA_PUZZLE_X}" type="text" /></dd>
+</dl>
+<dl>
+	<dt><label for="captcha_puzzle_y">{L_CAPTCHA_PUZZLE_Y_GRID}:</label><br /><span>{L_CAPTCHA_PUZZLE_Y_EXPLAIN}</span></dt>
+	<dd><input id="captcha_puzzle_y" name="captcha_puzzle_y" value="{CAPTCHA_PUZZLE_Y}" type="text" /></dd>
+</dl>
+<dl>
+	<dt><label for="captcha_puzzle_img_x">{L_CAPTCHA_PUZZLE_IMG_X}:</label><br /><span>{L_CAPTCHA_PUZZLE_IMG_X_EXPLAIN}</span></dt>
+	<dd><input id="captcha_puzzle_img_x" name="captcha_puzzle_img_x" value="{CAPTCHA_PUZZLE_IMG_X}" type="text" /></dd>
+</dl>
+<dl>
+	<dt><label for="captcha_puzzle_img_y">{L_CAPTCHA_PUZZLE_IMG_X}:</label><br /><span>{L_CAPTCHA_PUZZLE_IMG_Y_EXPLAIN}</span></dt>
+	<dd><input id="captcha_puzzle_img_y" name="captcha_puzzle_img_y" value="{CAPTCHA_PUZZLE_IMG_Y}" type="text" /></dd>
+</dl>
+<dl>
+	<dt><label for="captcha_puzzle_resize">{L_CAPTCHA_PUZZLE_RESIZE}:</label><br /><span>{L_CAPTCHA_PUZZLE_RESIZE_EXPLAIN}</span></dt>
+	<dd><input id="captcha_puzzle_resize" name="captcha_puzzle_resize" value="1"
+		<!-- IF CAPTCHA_PUZZLE_RESIZE == 1 --> checked="checked"<!-- ENDIF -->
+		type="checkbox" /></dd>
+</dl>
+
+</fieldset>
+<fieldset>
+	<legend>{L_PREVIEW}</legend>
+	<!-- IF CAPTCHA_PREVIEW -->
+	<!-- INCLUDE {CAPTCHA_PREVIEW} -->
+	<!-- ENDIF -->
+
+</fieldset>
+
+<fieldset>
+	<legend>{L_ACP_SUBMIT_CHANGES}</legend>
+	<p class="submit-buttons">
+		<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+		<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />&nbsp;
+		<input class="button2" type="submit" id="preview" name="preview" value="{L_PREVIEW}" />&nbsp;
+	</p>
+
+	<input type="hidden" name="select_captcha" value="{CAPTCHA_NAME}" />
+	<input type="hidden" name="configure" value="1" />
+
+	{S_FORM_TOKEN}
+</fieldset>
+</form>
+
+<!-- INCLUDE overall_footer.html -->
