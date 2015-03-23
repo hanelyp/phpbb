@@ -1,0 +1,9 @@
+services:
+    hanelyp.fancydice.listener:
+        class: hanelyp\fancydice\event\main_listener
+        arguments:
+            - @controller.helper
+            - @template
+            - @user
+        tags:
+            - { name: event.listener }

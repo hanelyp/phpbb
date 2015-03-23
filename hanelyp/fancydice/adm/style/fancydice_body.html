@@ -1,0 +1,32 @@
+<!-- INCLUDE overall_header.html -->
+
+<h1>{L_SETTINGS}</h1>
+
+<form id="acp_board" method="post" action="{U_ACTION}">
+	<fieldset>
+		<!-- BEGIN macros -->
+		<dl>
+			<dt><label for="hanelyp_fancydice_name">{L_ACP_FANCYDICE_DIE_NAME}</label></dt>
+			<dd><input name="macroName_{macros.index}" value="{macros.name}"/>&nbsp;
+			<dt><label for="hanelyp_fancydice_def">{L_ACP_FANCYDICE_DIE_DEF}</label></dt>
+			<dd><input name="macroDef_{macros.index}" value="{macros.def}"/>&nbsp;
+		</dl>
+		<!-- END loopname -->
+		<dl>
+			<dt><label for="hanelyp_fancydice_name">{L_ACP_FANCYDICE_DIE_NAME}</label></dt>
+			<dd><input name="macroName_{U_NEXTINDEX}" value=""/>&nbsp;
+			<dt><label for="hanelyp_fancydice_def">{L_ACP_FANCYDICE_DIE_DEF}</label></dt>
+			<dd><input name="macroDef_{U_NEXTINDEX}" value=""/>&nbsp;
+		</dl>
+
+
+		<p class="submit-buttons">
+			<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+			<input class="button2" type="reset" id="reset" name="reset" value="{L_RESET}" />
+		</p>
+
+		{S_FORM_TOKEN}
+	</fieldset>
+</form>
+(see fancydice.php in this module for dice definition specs)
+<!-- INCLUDE overall_footer.html -->
