@@ -7,7 +7,7 @@
 *
 */
 
-namespace acme\demo\acp;
+namespace hanelyp\fancydice\acp;
 
 class main_module
 {
@@ -39,7 +39,7 @@ class main_module
 	{
 		global $config, $request;
 		$i = 1;
-		while ($name = $request->variable('macroName_'.$i)
+		while ($name = $request->variable('macroName_'.$i))
 		{
 			$def = $request->variable('macroDef_'.$i);
 			$dice = new \hanelyp\fancydice\fancydice(false, $def);
