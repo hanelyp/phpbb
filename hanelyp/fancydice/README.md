@@ -55,12 +55,11 @@ The spec consists of the following tokens:
   - so 3d8 resolves to 3@[1_8], which resolves to
   - [1_8][1_8][1_8] which might resolve to 3,7,4.
 
-- Other	Any other symbol is discarded,	but serves to
-  - separate tokens
+- Other	Any other symbol is discarded,	but serves to separate tokens
   - Example:		3,2
   - Resolves as:	3,2
   - The comma is discarded, but prevents it from resolving as 32.
-		
+
 ## License
 
 [GPLv2](license.txt)

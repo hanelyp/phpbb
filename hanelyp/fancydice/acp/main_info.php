@@ -7,14 +7,15 @@
 *
 */
 
-namespace acme\demo\acp;
-
+namespace hanelyp\fancydice\acp;
+//die;
 class main_info
 {
 	function module()
 	{
 		return array(
-			'filename'	=> '\hanelyp\fancydice\acp\main_module',
+			'filename'	=> //'_hanelyp_fancydice_acp_main_module', //
+							'\hanelyp\fancydice\acp\main_module',
 			'title'		=> 'ACP_FANCYDICE_TITLE',
 			'version'	=> '1.0.0',
 			'modes'		=> array(

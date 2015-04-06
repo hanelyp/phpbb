@@ -23,8 +23,9 @@ class main_listener implements EventSubscriberInterface
 	*/
 	public function __construct($config)
 	{
-		echo 'constructing listener, fancydice<br />';
+		//echo 'constructing listener, fancydice<br />';
 		$this->config = $config;
+		//$this->prep_bbcode();
 	}
 	
 	static public function getSubscribedEvents()
@@ -39,6 +40,12 @@ class main_listener implements EventSubscriberInterface
 		//	'core.bbcode_cache_init_end'		=> 'bbcode_add_wrap',
 		);
 	}
+
+	public function prep_bbcode()
+	{
+		$bbcode = hanelyp\fancydice\bbcode::singlet();
+		$bbcode->setup($this->config);
+	}
 	
 	function get_macros()
 	{
@@ -51,9 +58,11 @@ class main_listener implements EventSubscriberInterface
 			while (isset($config['fancyDiceMacro_'.$i]))
 			{
 				$macro = json_decode($config['fancyDiceMacro_'.$i]);
+				//$macro = explode(':', $config['fancyDiceMacro_'.$i]);
 				foreach ($macro as $key=>$value)
 				{
 					$macros[$key] = $value;
+					//$macros[$macro[0]] = array('INDEX'=>$i, 'NAME'=>$macro[0], 'DEF'=>$macro[1]);
 				}
 				$i++;
 			}
@@ -136,15 +145,17 @@ class main_listener implements EventSubscriberInterface
 	public function dice_process_posting($event)
 	{
 		//return;
-		echo "dice posting<br />";
+		//echo "dice posting<br />";
 		$message = $event['message_parser']->message;
-		echo $event['post_id'],'<br />',$message, '<br />';
+		// need to replace post_id here.  Will be covered by bbcode integration being considered
+		//echo $event['post_id'],'<br />',$message, '<br />';
 //		global $config;
 		
 		// load configured macros
 		$macros = $this->get_macros();
 		
 		$this->dice = new \hanelyp\fancydice\fancydice($macros, $event['post_id']);
+		//$this->dice->debug = true;
 		//$this->dice->debug = true;
 		$that = $this;
 		//preg_replace_callback('/(\[dice\])(.*)([[\\dice\]/)', $this->replace_dice, $message);
@@ -156,7 +167,7 @@ class main_listener implements EventSubscriberInterface
 			}
 			, $message);
 		//$event['preview'] = $message;
-		echo $message, '<br />';
+		//echo $message, '<br />';
 		$event['message_parser']->message = $message;
 		//return ($event);
 	}

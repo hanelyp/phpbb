@@ -25,9 +25,12 @@ class main_module
 			while (isset($config['fancyDiceMacro_'.$i]))
 			{
 				$macro = json_decode($config['fancyDiceMacro_'.$i]);
+				//$macro = explode(':', $config['fancyDiceMacro_'.$i]);
 				foreach ($macro as $key=>$value)
 				{
-					$macros[] = array('index'=>$i, 'name'=>$key, 'def'=>$value);
+					//echo "$key=>$value<br />";
+					$macros[] = array('INDEX'=>$i, 'NAME'=>$key, 'DEF'=>$value);
+					//$macros[] = array('INDEX'=>$i, 'NAME'=>$macro[0], 'DEF'=>$macro[1]);
 				}
 				$i++;
 			}
@@ -39,15 +42,22 @@ class main_module
 	{
 		global $config, $request;
 		$i = 1;
-		while ($name = $request->variable('macroName_'.$i))
+		while ($name = $request->variable('macroName_'.$i,''))
 		{
-			$def = $request->variable('macroDef_'.$i);
-			$dice = new \hanelyp\fancydice\fancydice(false, $def);
+			$def = $request->variable('macroDef_'.$i,'');
+			// $request->variable() is being 'helpful'
+			$def = html_entity_decode($def);
+			
+			$dice = new \hanelyp\fancydice\fancydice(false);
+			$res = $dice->roll($def);
+			//echo "$name => $def<br />";
 			if (!$dice)
 			{
 				trigger_error($user->lang('ACP_FANCYDICE_DEF_ERROR').$name.'=>'.$def . adm_back_link($this->u_action));
 			}
-			$config->set('fancyDiceMacro_'.$i, json_encode(array($name=>$def)));
+			//echo json_encode(array($name=>$def),JSON_HEX_TAG),'<br />';
+			$config->set('fancyDiceMacro_'.$i, json_encode(array($name=>$def), 0));
+			//$config->set('fancyDiceMacro_'.$i, $name.':'.$def);
 			$i++;
 		}
 	}
@@ -57,7 +67,8 @@ class main_module
 		global $db, $user, $auth, $template, $cache, $request;
 		global $config, $phpbb_root_path, $phpbb_admin_path, $phpEx;
 
-		$user->add_lang('acp/common');
+		//$user->add_lang('acp/common');
+		$user->add_lang_ext('hanelyp/fancydice', 'common');
 		$this->tpl_name = 'fancydice_body';
 		$this->page_title = $user->lang('ACP_FANCYDICE_TITLE');
 		add_form_key('hanelyp/fancydice');
@@ -80,7 +91,8 @@ class main_module
 		foreach ($macros as $macro)
 		{
 			//$macro['index'] = $i; 
-			$template->assign_block_vars('macro', $macro );
+			//echo json_encode($macro),'<br />';
+			$template->assign_block_vars('macros', $macro );
 			$i++;
 		}
 		$template->assign_vars(array(

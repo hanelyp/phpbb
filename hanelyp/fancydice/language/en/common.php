@@ -25,6 +25,8 @@ $lang = array_merge($lang, array(
 	'ACP_FANCYDICE_TITLE'		=> 'Fancy Dice Config',
 	'ACP_FANCYDICE'				=> 'Settings',
 	'ACP_FANCYDICE_DIE_NAME'	=> 'base name of die',
-	'ACP_FANCYDICE_DIE_NAME'	=> 'definition of die',
+	'ACP_FANCYDICE_DIE_DEF'		=> 'definition of die',
 	'ACP_FANCYDICE_DEF_ERROR'	=> 'Error encountered with dice definition: ',
+	'ACP_FANCYDICE_SETTING_SAVED'	=> 'Fancy Dice Config Saved',
+	'FANCYDICE_SPECDEF'			=> 'see fancydice.php in this module for dice definition specs',
 ));
